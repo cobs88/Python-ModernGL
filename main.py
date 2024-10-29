@@ -3,6 +3,7 @@ import moderngl
 import sys
 from model import *
 from camera import Camera
+from light import Light
 
 class GraphicsEngine: 
     def __init__(self, win_size=(800, 600)):
@@ -28,6 +29,7 @@ class GraphicsEngine:
         self.time = 0
         self.delta_time = 0
 
+        self.light = Light()
         self.camera = Camera(self)
         self.scene = Cube(self)
 
