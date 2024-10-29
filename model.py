@@ -16,6 +16,7 @@ class Cube:
     def get_texture(self, path):
         texture = pygame.image.load(path).convert()
         texture = pygame.transform.flip(texture, flip_x=False, flip_y=True)
+        texture.fill('red')
         texture = self.context.texture(size=texture.get_size(), components=3, data=pygame.image.tostring(texture, 'RGB'))
 
         return texture
