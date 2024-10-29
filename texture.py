@@ -12,6 +12,10 @@ class Texture:
         texture = pygame.transform.flip(texture, flip_x=False, flip_y=True)
         texture = self.context.texture(size=texture.get_size(), components=3, data=pygame.image.tostring(texture, 'RGB'))
 
+        texture.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR)
+        texture.build_mipmaps()
+
+        texture.anisotropy = 32.0
         return texture
     
     def destroy(self):

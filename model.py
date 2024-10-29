@@ -3,8 +3,11 @@ import glm
 import pygame
 
 class BaseModel:
-    def __init__(self, app, vao_name, texture_id):
+    def __init__(self, app, vao_name, texture_id, position=(0, 0, 0), rotation=(0, 0, 0), scale=(0, 0, 0)):
         self.app = app
+        self.position = position
+        self.rotation = glm.vec3([glm.radians(a) for a in rotation])
+        self.scale = scale
         self.m_model = self.get_model_matrix()
         self.texture_id = texture_id
         self.vao = app.mesh.vao.vaos[vao_name]
@@ -15,6 +18,17 @@ class BaseModel:
 
     def get_model_matrix(self):
         m_model = glm.mat4()
+        # translation
+        m_model = glm.translate(m_model, self.position)
+
+        # rotation
+        m_model = glm.rotate(m_model, self.rotation.x, glm.vec3(1, 0, 0))
+        m_model = glm.rotate(m_model, self.rotation.y, glm.vec3(0, 1, 0))
+        m_model = glm.rotate(m_model, self.rotation.z, glm.vec3(0, 0, 1))
+
+        # scaling
+        m_model = glm.scale(m_model, self.scale)
+
         return m_model
     
     def render(self):
@@ -22,8 +36,8 @@ class BaseModel:
         self.vao.render()
 
 class Cube(BaseModel):
-    def __init__(self, app, vao_name='cube', texture_id=0):
-        super().__init__(app, vao_name, texture_id)
+    def __init__(self, app, vao_name='cube', texture_id=0, position=(0, 0, 0), rotation=(0, 0, 0), scale=(1, 1, 1)):
+        super().__init__(app, vao_name, texture_id, position, rotation, scale)
         self.on_init()
 
     def update(self):

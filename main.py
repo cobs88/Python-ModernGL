@@ -5,6 +5,7 @@ from model import *
 from camera import Camera
 from light import Light
 from mesh import Mesh
+from scene import Scene
 
 class GraphicsEngine: 
     def __init__(self, win_size=(800, 600)):
@@ -33,8 +34,8 @@ class GraphicsEngine:
         self.mesh = Mesh(self)
         self.light = Light()
         self.camera = Camera(self)
-        self.scene = Cube(self)
-        
+        self.scene = Scene(self)
+
     def check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
