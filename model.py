@@ -46,16 +46,20 @@ class Cube(BaseModel):
         self.program['m_view'].write(self.camera.m_view)
         self.program['camPos'].write(self.camera.position)
 
+        for i, light in enumerate(self.app.scene.lights):
+            self.program[f'lights[{i}].position'].write(light.position)
+            self.program[f'lights[{i}].Ia'].write(light.Ia)
+            self.program[f'lights[{i}].Id'].write(light.Id)
+            self.program[f'lights[{i}].Is'].write(light.Is)
+
+        self.program['lightCount'].value = len(self.app.scene.lights)  # Update the light count
+
     def on_init(self):
         self.texture = self.app.mesh.texture.textures[self.texture_id]
         self.program['u_texture_0'] = 0
         self.texture.use()
 
-        # light
-        self.program['light.position'].write(self.app.light.position)
-        self.program['light.Ia'].write(self.app.light.Ia)
-        self.program['light.Id'].write(self.app.light.Id)
-        self.program['light.Is'].write(self.app.light.Is)
+
 
         # textures
         self.program['u_texture_0'] = 0

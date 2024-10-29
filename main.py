@@ -32,7 +32,6 @@ class GraphicsEngine:
         self.delta_time = 0
 
         self.mesh = Mesh(self)
-        self.light = Light()
         self.camera = Camera(self)
         self.scene = Scene(self)
 

@@ -8,43 +8,64 @@ in vec3 fragPos;
 
 struct Light {
     vec3 position;
-    vec3 Ia;
-    vec3 Id;
-    vec3 Is;
+    vec3 Ia;  // Ambient intensity
+    vec3 Id;  // Diffuse intensity
+    vec3 Is;  // Specular intensity
 };
 
-uniform Light light;
+uniform Light lights[10];  // Change size as needed
+uniform int lightCount;    // Number of active lights
 uniform sampler2D u_texture_0;
 uniform vec3 camPos;
 
 vec3 getLight(vec3 color) {
-    vec3 Normal = normalize(normal); // get normal
+    vec3 Normal = normalize(normal); // Get normal
 
-    // ambient lighting
-    vec3 ambient = light.Ia;
+    // Ambient lighting
+    vec3 ambient = vec3(0.0);
+    int numLights = 0; // Count how many lights we will consider
 
-    // diffuse lighting
-    vec3 lightDir = normalize(light.position - fragPos);
-    float diff = max(0, dot(lightDir, Normal));
-    vec3 diffuse = diff * light.Id;
+    // Loop through each light
+    for (int i = 0; i < 10; ++i) { // Assuming you have a maximum of 10 lights
+        if (i < lightCount) { // Only consider active lights
+            ambient += lights[i].Ia; // Accumulate ambient contribution
+            numLights++; // Increment count of active lights
+        }
+    }
 
-    // specular lighting
-    vec3 viewDir = normalize(camPos - fragPos);
-    vec3 reflectDir = reflect(-lightDir, Normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0), 32);
-    vec3 specular = spec * light.Is;
+    // Scale the ambient lighting based on the number of lights
+    ambient *= (1.0 / float(numLights)); // Average ambient
 
+    // Diffuse lighting
+    vec3 diffuse = vec3(0.0);
+    for (int i = 0; i < numLights; ++i) {
+        vec3 lightDir = normalize(lights[i].position - fragPos);
+        float diff = max(0, dot(lightDir, Normal));
+        diffuse += diff * lights[i].Id; // Accumulate diffuse contributions
+    }
+
+    // Specular lighting
+    vec3 specular = vec3(0.0);
+    for (int i = 0; i < numLights; ++i) {
+        vec3 lightDir = normalize(lights[i].position - fragPos);
+        vec3 viewDir = normalize(camPos - fragPos);
+        vec3 reflectDir = reflect(-lightDir, Normal);
+        float spec = pow(max(dot(viewDir, reflectDir), 0), 32);
+        specular += spec * lights[i].Is; // Accumulate specular contributions
+    }
+
+    // Combine color with lighting
     return color * (ambient + diffuse + specular);
 }
 
-void main(){
+void main() {
     float gamma = 2.2;
     vec3 color = texture(u_texture_0, uv_0).rgb;
 
-    color = pow(color, vec3(gamma));
+    color = pow(color, vec3(gamma)); // Apply gamma correction
 
-    color = getLight(color);
+    color = getLight(color); // Calculate lighting
 
-    color = pow(color, 1 / vec3(gamma));
+    color = pow(color, vec3(1.0 / gamma)); // Reverse gamma correction
     fragColor = vec4(color, 1.0);
 }
