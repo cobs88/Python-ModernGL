@@ -4,6 +4,7 @@ import sys
 from model import *
 from camera import Camera
 from light import Light
+from mesh import Mesh
 
 class GraphicsEngine: 
     def __init__(self, win_size=(800, 600)):
@@ -29,14 +30,15 @@ class GraphicsEngine:
         self.time = 0
         self.delta_time = 0
 
+        self.mesh = Mesh(self)
         self.light = Light()
         self.camera = Camera(self)
         self.scene = Cube(self)
-
+        
     def check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                self.scene.destroy()
+                self.mesh.destroy()
                 pygame.quit()
                 sys.exit()
 
