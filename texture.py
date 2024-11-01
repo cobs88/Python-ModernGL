@@ -6,6 +6,7 @@ class Texture:
         self.context = context
         self.textures = {}
         self.textures[0] = self.get_texture(path='textures/dirt.png')
+        self.textures['map'] = self.get_texture(path='textures/map.png')
 
     def get_texture(self, path):
         texture = pygame.image.load(path).convert()

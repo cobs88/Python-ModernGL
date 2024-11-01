@@ -1,10 +1,12 @@
 import numpy
 import moderngl
+from objparser import OBJParser
 
 class VBO:
     def __init__(self, context):
         self.vbos = {}
         self.vbos['cube'] = CubeVBO(context)
+        self.vbos['map'] = MapVBO(context)
 
     def destroy(self):
         [vbo.destroy() for vbo in self.vbos.values()]
@@ -74,4 +76,18 @@ class CubeVBO(BaseVBO):
         vertex_data = numpy.hstack([tex_coord_data, vertex_data])
 
 
+        return vertex_data
+    
+
+class MapVBO(BaseVBO):
+    def __init__(self, app):
+        super().__init__(app)
+        self.format = '2f 3f 3f'
+        self.attribs = ['in_texcoord_0', 'in_normal', 'in_position']
+        
+    def get_vertex_data(self):
+        parser = OBJParser("objects/nuclear_power_plant.obj")
+
+        vertex_data = parser.load()
+        
         return vertex_data

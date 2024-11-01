@@ -8,7 +8,7 @@ from mesh import Mesh
 from scene import Scene
 
 class GraphicsEngine: 
-    def __init__(self, win_size=(800, 600)):
+    def __init__(self, win_size=(1920, 1080)):
         pygame.init()
 
         self.WIN_SIZE = win_size
@@ -43,7 +43,7 @@ class GraphicsEngine:
                 sys.exit()
 
     def render(self):
-        self.context.clear(color=(0.08, 0.16, 0.18)) # draws the background
+        self.context.clear(color=(1, 1, 1)) # draws the background
 
         self.scene.render() # render the scene
 

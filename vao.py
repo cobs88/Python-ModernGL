@@ -13,6 +13,11 @@ class VAO:
             vbo = self.vbo.vbos['cube']
         )
 
+        self.vaos['map'] = self.get_vao(
+            program = self.program.programs['default'],
+            vbo = self.vbo.vbos['map']
+        )
+
     def get_vao(self, program, vbo):
         vao = self.context.vertex_array(program, [(vbo.vbo, vbo.format, *vbo.attribs)])
         return vao

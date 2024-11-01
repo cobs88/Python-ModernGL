@@ -69,3 +69,38 @@ class Cube(BaseModel):
         self.program['m_proj'].write(self.app.camera.m_proj) # writes the projection matrix to the shader program
         self.program['m_view'].write(self.app.camera.m_view) # writes the view matrix to the shader program
         self.program['m_model'].write(self.m_model) # writes the model matrix to the shader program
+
+class Map(BaseModel):
+    def __init__(self, app, vao_name='map', texture_id='map', position=(0, 0, 0), rotation=(0, 0, 0), scale=(1, 1, 1)):
+        super().__init__(app, vao_name, texture_id, position, rotation, scale)
+        self.on_init()
+
+    def update(self):
+        self.texture.use()
+        self.program['m_model'].write(self.m_model)
+        self.program['m_view'].write(self.camera.m_view)
+        self.program['camPos'].write(self.camera.position)
+
+        for i, light in enumerate(self.app.scene.lights):
+            self.program[f'lights[{i}].position'].write(light.position)
+            self.program[f'lights[{i}].Ia'].write(light.Ia)
+            self.program[f'lights[{i}].Id'].write(light.Id)
+            self.program[f'lights[{i}].Is'].write(light.Is)
+
+        self.program['lightCount'].value = len(self.app.scene.lights)  # Update the light count
+
+    def on_init(self):
+        self.texture = self.app.mesh.texture.textures[self.texture_id]
+        self.program['u_texture_0'] = 0
+        self.texture.use()
+
+
+
+        # textures
+        self.program['u_texture_0'] = 0
+        self.texture.use()
+
+        # matrices
+        self.program['m_proj'].write(self.app.camera.m_proj) # writes the projection matrix to the shader program
+        self.program['m_view'].write(self.app.camera.m_view) # writes the view matrix to the shader program
+        self.program['m_model'].write(self.m_model) # writes the model matrix to the shader program
