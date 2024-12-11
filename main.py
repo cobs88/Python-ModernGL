@@ -43,7 +43,7 @@ class GraphicsEngine:
                 sys.exit()
 
     def render(self):
-        self.context.clear(color=(1, 1, 1)) # draws the background
+        self.context.clear(color=(0, 0, 0)) # draws the background
 
         self.scene.render() # render the scene
 

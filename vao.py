@@ -8,6 +8,11 @@ class VAO:
         self.program = ShaderProgram(context)
         self.vaos = {}
 
+        self.vaos['plane'] = self.get_vao(
+            program = self.program.programs['default'],
+            vbo = self.vbo.vbos['plane']
+        )
+
         self.vaos['cube'] = self.get_vao(
             program = self.program.programs['default'],
             vbo = self.vbo.vbos['cube']
